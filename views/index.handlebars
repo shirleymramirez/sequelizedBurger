@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="jumbotron">
+        {{!-- header and image dislay --}}
+        <h1 class="center-align">Eat-da-Burger</h1>
+        <div class="center-align">
+            <img src="/assets/img/burger.jpg" alt="burger picture" class="responsive-img" width="100px">
+        </div>
+
+        {{!-- Burger list section --}}
+        <div class="row"> 
+            <div class="col s6">
+                <h3 class="center-align">Burger List</h3>
+                <ul>
+                    {{#each burgers}}
+                        {{#unless this.devoured}}
+                            <form action="burgers/{{this.id}}?_method=PUT" method="POST" class="burgerlist">
+                                <div class="burgerNameContainer"><p>{{this.id}}.{{this.burger_name}}</p></div>
+                                <button data-burgerid="{{this.id}}" type="submit" class="devouredBurgerButton">Devour</button>
+                            </form>
+                        {{/unless}}
+                    {{/each}}
+                </ul>
+            </div>
+
+            {{!-- Devoured Section --}}
+            <div class="col s6">
+                {{#if hasDevoured}}
+                   <h3 class="center-align">Yummm! gone...</h3>
+                    <ul>
+                        {{#each burgers}}
+                            {{#if this.devoured}}
+                            <li>
+                                {{this.id}}.{{this.burger_name}}
+                            </li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </div>
+        </div>
+
+
+        {{!-- Submit button and text area --}}
+        <div class="center-align">
+            <form action="/" class="create-form" method="POST" >
+                <textarea type="text" name="task" id="inputBurgerId" required></textarea>
+                <button type="submit">Submit</button>
+                <h6 class="center-align">Enter a burger  you want  to eat Click the "submit" button</h6>
+            </form>
+        </div>
+
+        {{!-- Javascript  --}}
+        <script type="text/javascript">
+            {{!-- create from once user input a burger type --}}
+            $(".create-form").on("submit", function(event) {
+                event.preventDefault();
+
+                {{!-- store into a new var a list of burger names --}}
+                var newBurgerName = {
+                    burger_name: $("#inputBurgerId").val().trim()
+                }
+                
+                {{!-- calls ajax to post the new burger --}}
+                $.ajax("/api/burgers/", {
+                    type: "POST",
+                    data: newBurgerName
+                }).then(function(){
+                    console.log("new burger");
+                    location.reload();
+                });
+            });
+
+            {{!-- for devour button --}}
+            $(".devouredBurgerButton").on("click", function(event){  
+                event.preventDefault();
+
+                {{!-- store into a var the attribute data burger id --}}
+                var id = $(this).attr("data-burgerid");
+
+                {{!-- ajax call put the new id  --}}
+                $.ajax("/api/burgers/" + id, {
+                    type: "PUT",
+                    data: id
+                }).then(function () {
+                    console.log("new burger");
+                    location.reload();
+                });
+            })
+        </script>
+    </div>
+</div>
