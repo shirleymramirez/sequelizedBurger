@@ -16,12 +16,10 @@ router.get("/", function(req, res) {
 });
 
 router.post("/api/burgers", function(req, res) {
-    db.Burger.create({
-            burger_name: req.body.burger_name
-                // devoured: false
-        })
+    db.Burger
+        .create({ burger_name: req.body.burger_name })
         .then(function() {
-            res.redirect("/");
+            res.render("index");
         })
         .catch(function(err) {
             // Whenever a validation or flag fails, an error is thrown
@@ -30,29 +28,23 @@ router.post("/api/burgers", function(req, res) {
         });
 });
 
-router.put('/api/burgers/:id', function(req, res) {
-    db.Burger.update({
-        devoured: true
-    }, {
-        where: {
-            id: req.params.id
-        },
-    }).then(function() {
-        res.render("index");
-    }).catch(function(err) {
-        res.json(err);
-    });
+router.put("/api/burgers/:id", function(req, res) {
+    db.Burger
+        .update({ devoured: true }, { where: { id: req.params.id } })
+        .then(function() {
+            res.render("index");
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
 });
 
 router.delete("/api/burgers/:id", function(req, res) {
-    db.Burger.destroy({
-        where: {
-            id: req.params.id
-        }
-    }).then(function() {
-        res.render("index");
-    });
+    db.Burger
+        .destroy({ where: { id: req.params.id } })
+        .then(function() {
+            res.render("index");
+        });
 });
-
-module.exports = router;
 // };
+module.exports = router;
