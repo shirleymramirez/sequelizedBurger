@@ -1,22 +1,8 @@
-// Import the ORM to create functions that will interact with the database.
-
-var burger = {
-    selectAll: function(callback) {
-        selectAll("burgers", function(result) {
-            callback(result);
-        });
-    },
-    insertOne: function(columns, valueOfColumns, callback) {
-        insertOne("burgers", columns, valueOfColumns, function(result) {
-            callback(result);
-        });
-    },
-    updateOne: function(objColumnValues, condition, callback) {
-        updateOne("burgers", objColumnValues, condition, function(result) {
-            callback(result);
-        });
-    }
+// 'use strict';
+module.exports = function(sequelize, DataTypes) {
+    var Burger = sequelize.define("Burger", {
+        burger_name: DataTypes.STRING,
+        devoured: DataTypes.BOOLEAN,
+    });
+    return Burger;
 };
-
-// Export the database functions for the controller
-module.exports = burger;

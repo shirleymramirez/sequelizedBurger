@@ -1,34 +1,45 @@
-var express = require("express");
-var router = express.Router();
-var burger = require("../models/burger.js");
+// Pulls out the Burger Models
+var db = require("../models");
 
-// Routes
-router.get("/", function(req, res) {
-    burger.selectAll(function(result) {
-        res.render("index", {
-            burgers: result,
-            // if one of the item is true, used devoured
-            hasDevoured: result.some(item => item.devoured)
+module.exports = function(app) {
+    app.get("/", function(req, res) {
+        db.Burger.findAll({}).then(function(dbBurger) {
+            res.render("index", {
+                burgers: [],
+                // if one of the item is true, used devoured
+                hasDevoured: false, //dbBurger.some(item => item.devoured)
+            });
         });
     });
 
-    router.post('/api/burgers', function(req, res) {
-        burger.insertOne("burger_name", [req.body.burger_name], function(result) {
-            res.json({ id: result.insertId });
-        });
+    app.post("/api/burgers", function(req, res) {
+        db.Burger
+            .create({ burger_name: req.body.burger_name, devoured: false })
+            .then(function(dbBurger) {
+                db.Burger.findAll({}).then(function(dbBurger) {
+                    res.render("index", {
+                        burgers: dbBurger,
+                        // if one of the item is true, used devoured
+                        hasDevoured: false //dbBurger.some(item => item.devoured)
+                    });
+                });
+            });
     });
 
-    router.put('/api/burgers/:id', function(req, res) {
-        var condition = 'id = ' + req.params.id;
-        burger.updateOne({ devoured: true }, condition, function(result) {
-            if (result.changedRows === 0) {
-                // If no rows were changed, then the ID must not exist, so 404
-                return res.status(404).end();
-            }
-            res.status(200).end();
+    app.put('/api/burgers/:id', function(req, res) {
+        db.Burger.update({ devoured: true }, {
+            where: {
+                id: req.params.id
+            },
+        }).then(function(dbBurger) {
+            db.Burger.findAll({}).then(function(dbBurger) {
+                res.render("index", {
+                    burgers: dbBurger,
+                    // if one of the item is true, used devoured
+                    hasDevoured: false //dbBurger.some(item => item.devoured)
+                });
+            });
 
         });
     });
-});
-
-module.exports = router;
+};

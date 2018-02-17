@@ -54,7 +54,6 @@
             {{!-- create from once user input a burger type --}}
             $(".create-form").on("submit", function(event) {
                 event.preventDefault();
-
                 {{!-- store into a new var a list of burger names --}}
                 var newBurgerName = {
                     burger_name: $("#inputBurgerId").val().trim()
@@ -79,8 +78,7 @@
 
                 {{!-- ajax call put the new id  --}}
                 $.ajax("/api/burgers/" + id, {
-                    type: "PUT",
-                    data: id
+                    type: "PUT"
                 }).then(function () {
                     console.log("new burger");
                     location.reload();

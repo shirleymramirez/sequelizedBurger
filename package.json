@@ -24,6 +24,7 @@
     "materialize-css": "^0.100.2",
     "method-override": "^2.3.10",
     "mysql": "^2.15.0",
+    "mysql2": "^1.5.2",
     "sequelize": "^4.33.4"
   },
   "devDependencies": {}
