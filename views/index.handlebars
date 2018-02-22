@@ -13,9 +13,10 @@
                 <ul>
                     {{#each burgers}}
                         {{#unless this.devoured}}
-                            <form action="burgers/{{this.id}}?_method=PUT" method="POST" class="burgerlist">
+                            <form action="api/burgers/{{this.id}}?_method=PUT" method="POST" class="burgerList">
                                 <div class="burgerNameContainer"><p>{{this.id}}.{{this.burger_name}}</p></div>
-                                <button data-burgerid="{{this.id}}" type="submit" class="devouredBurgerButton">Devour</button>
+                                <input type="text" name="customerName" placeholder="Customer?" required>
+                                <button type="submit" class="devouredBurgerButton">Devour</button>
                             </form>
                         {{/unless}}
                     {{/each}}
@@ -29,9 +30,13 @@
                     <ul>
                         {{#each burgers}}
                             {{#if this.devoured}}
-                            <li>
-                                {{this.id}}.{{this.burger_name}}
-                            </li>
+                            <form action="api/burgers/{{this.id}}?_method=DELETE" method="POST" class="devouredList">
+                                <div class="devouredContainer">
+                                     {{this.id}}.{{this.burger_name}}
+                                    <i>(Devoured by {{this.Customer.name}})</i>
+                                </div>
+                                <button type="submit" class="delete-burger">DELETE!</button>
+                            </form>
                             {{/if}}
                         {{/each}}
                     </ul>
@@ -42,47 +47,11 @@
 
         {{!-- Submit button and text area --}}
         <div class="center-align">
-            <form action="/" class="create-form" method="POST" >
-                <textarea type="text" name="task" id="inputBurgerId" required></textarea>
+            <form action="/api/burgers" class="create-form" method="POST" >
+                <textarea type="text" name="burger_name" id="inputBurgerId" required></textarea>
                 <button type="submit">Submit</button>
                 <h6 class="center-align">Enter a burger  you want  to eat Click the "submit" button</h6>
             </form>
         </div>
-
-        {{!-- Javascript  --}}
-        <script type="text/javascript">
-            {{!-- create from once user input a burger type --}}
-            $(".create-form").on("submit", function(event) {
-                event.preventDefault();
-                {{!-- store into a new var a list of burger names --}}
-                var newBurgerName = {
-                    burger_name: $("#inputBurgerId").val().trim()
-                }
-                
-                {{!-- calls ajax to post the new burger --}}
-                $.ajax("/api/burgers/", {
-                    type: "POST",
-                    data: newBurgerName
-                }).then(function(){
-                    console.log("new burger");
-                    location.reload();
-                });
-            });
-
-            {{!-- for devour button --}}
-            $(".devouredBurgerButton").on("click", function(event){  
-                event.preventDefault();
-                {{!-- store into a var the attribute data burger id --}}
-                var id = $(this).attr("data-burgerid");
-
-                {{!-- ajax call put the new id  --}}
-                $.ajax("/api/burgers/" + id, {
-                    type: "PUT"
-                }).then(function () {
-                    console.log("new burger");
-                    location.reload();
-                });
-            })
-        </script>
     </div>
 </div>

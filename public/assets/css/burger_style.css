@@ -7,7 +7,7 @@ h3 {
     font-style: oblique;
 }
 
-.burgerlist {
+.burgerList {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,7 +15,8 @@ h3 {
     margin: 10px;
 }
 
-.devouredBurgerButton {
+.devouredBurgerButton,
+.delete-burger {
     float: right;
     height: 30px;
     background-color: rgb(218, 110, 23);
@@ -33,6 +34,10 @@ h3 {
     vertical-align: middle;
 }
 
+.devouredContainer {
+    display: inline;
+}
+
 p {
     margin: 0;
     padding: 0 5px;
@@ -40,7 +45,7 @@ p {
     overflow-wrap: break-word;
 }
 
-li {
+.devouredList {
     height: 40px;
     background-color: beige;
     margin: 10px;
